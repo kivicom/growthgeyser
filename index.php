@@ -4,35 +4,28 @@ require_once('vendor/autoload.php');
 $client = new \GuzzleHttp\Client();
 const API_TOKEN = '9ba4c1525fcf76cf4004e5c5c55110ee8c0af7d506d447c378abd490388523549b33eb96';
 
-/*$notesData = [
-    [
-        'note' => 'Note 1 for the deal',
+
+/*====== Next code we create note in the deal ======*/
+/*
+$dealID = '472';
+$response = $client->request('POST', 'https://growthgeyser.api-us1.com/api/3/deals/'.$dealID.'/notes', [
+    'headers' => [
+        'Api-Token' => API_TOKEN,
+        'accept' => 'application/json',
+        'content-type' => 'application/json',
     ],
-    [
-        'note' => 'Note 2 for the deal',
+    'json' => [
+        'note' => [
+            'note' => "Some note",
+        ],
     ],
-];
+]);
 
-$notesArray = [];
-foreach ($notesData as $note) {
-    $response = $client->request('POST', 'https://growthgeyser.api-us1.com/api/3/deals/472/notes', [
-        'headers' => [
-            'Api-Token' => '9ba4c1525fcf76cf4004e5c5c55110ee8c0af7d506d447c378abd490388523549b33eb96',
-            'accept' => 'application/json',
-            'content-type' => 'application/json',
-        ],
-        'json' => [
-            'note' => [
-                'note' => $note['note'],
-            ],
-        ],
-    ]);
-}
-
-echo $response->getBody();*/
+echo $response->getBody();
+*/
 
 
-
+/*====== Next code we create a deal and return dealID ======*/
 $dealData = [
     "deal" => [
         "contact" => "51",
@@ -59,10 +52,11 @@ $response = $client->request('POST', 'https://growthgeyser.api-us1.com/api/3/dea
 ]);
 
 $dealArray = json_decode($response->getBody(), true);
-/*============*/
 
+$dealID = $dealArray['deal']['id'];
 
-$dealId = $dealArray['deal']['id'];
+/*====== Next code/ After created deal we create notes in the deal ======*/
+
 $notesData = [
     [
         'note' => 'Note 1 for the deal',
@@ -76,7 +70,7 @@ $notesData = [
 ];
 
 foreach ($notesData as $note) {
-    $response = $client->request('POST', 'https://growthgeyser.api-us1.com/api/3/deals/' . $dealId . '/notes', [
+    $response = $client->request('POST', 'https://growthgeyser.api-us1.com/api/3/deals/' . $dealID . '/notes', [
         'headers' => [
             'Api-Token' => API_TOKEN,
             'accept' => 'application/json',
@@ -90,6 +84,6 @@ foreach ($notesData as $note) {
     ]);
     $noteArray = json_decode($response->getBody(), true);
 
-    echo "Created Deal ID - ".$dealArray['deal']['id'] ." - " . $noteArray['note']['note'];
+    echo "Created Deal ID - ".$dealID ." - " . $noteArray['note']['note'];
 }
 
